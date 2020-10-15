@@ -13,12 +13,24 @@ export class Cli {
 
   buildCommandDef: CommandDef = ['build', 'Command description.'];
 
-  deployCommandDef: CommandDef = ['deploy', 'Command description.'];
+  deployCommandDef: CommandDef = [
+    'deploy',
+    'Command description.',
+    ['-d, --dry-run', 'Staging only.'],
+  ];
 
   constructor() {
     this.clientScriptsModule = new ClientScriptsModule();
-    this.buildCommand = new BuildCommand();
-    this.deployCommand = new DeployCommand();
+    this.buildCommand = new BuildCommand(
+      this.clientScriptsModule.optionService,
+      this.clientScriptsModule.messageService
+    );
+    this.deployCommand = new DeployCommand(
+      this.clientScriptsModule.optionService,
+      this.clientScriptsModule.messageService,
+      this.clientScriptsModule.fileService,
+      this.clientScriptsModule.rollupService
+    );
   }
 
   getApp() {
@@ -43,11 +55,12 @@ export class Cli {
 
     // deploy
     (() => {
-      const [command, description] = this.deployCommandDef;
+      const [command, description, dryRunOpt] = this.deployCommandDef;
       commander
         .command(command)
         .description(description)
-        .action(() => this.deployCommand.run());
+        .option(...dryRunOpt) // -d, --dry-run
+        .action(({dryRun}) => this.deployCommand.run(dryRun));
     })();
 
     // help

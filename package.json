@@ -38,12 +38,22 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "commander": "^6.1.0"
+    "change-case": "^4.1.1",
+    "commander": "^6.1.0",
+    "fs-extra": "^9.0.1",
+    "prettier": "^2.1.2",
+    "rollup": "^2.30.0",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "uglify-js": "^3.11.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.13",
+    "@types/fs-extra": "^9.0.1",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.11.8",
+    "@types/prettier": "^2.1.1",
+    "@types/uglify-js": "^3.0.2",
     "chai": "^4.2.0",
     "coveralls": "^3.1.0",
     "gts": "^3.0.1",
