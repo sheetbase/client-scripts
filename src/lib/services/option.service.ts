@@ -36,7 +36,7 @@ export class OptionService {
         {
           input: './src/lib/exports.js',
           file: 'sheetbase-app.js',
-          name: 'sheetbase.app',
+          name: 'sheetbase',
         },
         {
           input: './src/api/exports.js',

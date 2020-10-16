@@ -22,13 +22,9 @@ export class DeployCommand {
     // publish
     if (!dryRun) {
       // npm publish
-      // this.publish(options.deployDir);
-      console.log('puslish ...');
+      this.publish(options.deployDir);
       // remove /.deploy
-      // await this.cleanup(options.deployDir);
-      console.log('cleanup ...');
-      // done
-      return this.messageService.logOk('Package published.');
+      await this.cleanup(options.deployDir);
     } else {
       return this.messageService.logOk('Publishing content saved.');
     }
@@ -84,8 +80,11 @@ export class DeployCommand {
         await this.fileService.outputFile(minifyMapPath, minifyMap.toString());
       }
       // save component packages
-      if (name.indexOf('.') !== -1) {
-        const [, componentName] = name.split('.');
+      if (file === 'sheetbase-app.js' || name.indexOf('.') !== -1) {
+        let [, componentName] = name.split('.');
+        if (!componentName) {
+          componentName = 'app';
+        }
         const componentSrcName =
           componentName === 'app' ? 'lib' : componentName;
         const packagePath = resolve(deployDir, componentName, 'package.json');
@@ -98,6 +97,7 @@ export class DeployCommand {
             `  "main": "../src/${componentSrcName}/exports.js",`,
             `  "types": "../src/${componentSrcName}/exports.d.ts",`,
             '}',
+            '',
           ].join('\n')
         );
       }
