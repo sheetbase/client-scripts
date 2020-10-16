@@ -1,6 +1,6 @@
 import {execSync} from 'child_process';
 import {resolve} from 'path';
-import {minify} from 'uglify-js';
+import {minify} from 'terser';
 
 import {OptionService, Options} from '../../lib/services/option.service';
 import {MessageService} from '../../lib/services/message.service';
@@ -36,6 +36,9 @@ export class DeployCommand {
 
   private async staging(options: Options) {
     const {deployDir, commonjsConfig, bundles} = options;
+    const {version: moduleVersion} = (await this.fileService.readJson(
+      'package.json'
+    )) as {version: string};
     // copy package.json & src
     await this.fileService.copy(['package.json'], deployDir);
     await this.fileService.copy(['src'], deployDir + '/src');
@@ -59,7 +62,45 @@ export class DeployCommand {
         }
       );
       // minify
-      // TODO: minification
+      const outputContent = await this.fileService.readFile(outputPath);
+      const minifyCodePath = outputPath.replace('.js', '.min.js');
+      const minifyCodeFileName = minifyCodePath
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop() as string;
+      const minifyMapPath = outputPath.replace('.js', '.min.js.map');
+      const minifyMapFileName = minifyMapPath
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop() as string;
+      const {code: minifyCode, map: minifyMap} = await minify(outputContent, {
+        sourceMap: {
+          filename: minifyCodeFileName,
+          url: minifyMapFileName,
+        },
+      });
+      if (minifyCode && minifyMap) {
+        await this.fileService.outputFile(minifyCodePath, minifyCode);
+        await this.fileService.outputFile(minifyMapPath, minifyMap.toString());
+      }
+      // save component packages
+      if (name.indexOf('.') !== -1) {
+        const [, componentName] = name.split('.');
+        const componentSrcName =
+          componentName === 'app' ? 'lib' : componentName;
+        const packagePath = resolve(deployDir, componentName, 'package.json');
+        await this.fileService.outputFile(
+          packagePath,
+          [
+            '{',
+            `  "name": "@sheetbase/client-${componentName}",`,
+            `  "version": "${moduleVersion}",`,
+            `  "main": "../src/${componentSrcName}/exports.js",`,
+            `  "types": "../src/${componentSrcName}/exports.d.ts",`,
+            '}',
+          ].join('\n')
+        );
+      }
     }
   }
 
