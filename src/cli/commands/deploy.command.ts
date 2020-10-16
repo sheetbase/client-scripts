@@ -35,9 +35,12 @@ export class DeployCommand {
     const {version: moduleVersion} = (await this.fileService.readJson(
       'package.json'
     )) as {version: string};
-    // copy package.json & src
-    await this.fileService.copy(['package.json'], deployDir);
+    // copy src & files
     await this.fileService.copy(['src'], deployDir + '/src');
+    await this.fileService.copy(
+      ['LICENSE', 'package.json', 'README.md'],
+      deployDir
+    );
     // bundling & minification
     for (let i = 0; i < bundles.length; i++) {
       // bundling

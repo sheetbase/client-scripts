@@ -26,7 +26,7 @@
 Scripts for Sheetbase client.
 
 - [`sheetbase-client-scripts build`](#command-build)
-- [`sheetbase-client-scripts deploy`](#command-deploy)
+- [`sheetbase-client-scripts deploy --dry-run`](#command-deploy)
 - [`sheetbase-client-scripts help`](#command-help)
 
 <h2><a name="command-reference"><p>Command reference</p>
@@ -41,6 +41,10 @@ Command description.
 </a></h3>
 
 Command description.
+
+**Options**
+
+- `-d, --dry-run`: Staging only.
 
 <h3><a name="command-help"><p><code>help</code></p>
 </a></h3>
