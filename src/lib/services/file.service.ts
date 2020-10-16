@@ -43,4 +43,12 @@ export class FileService {
   async remove(path: string) {
     return fsRemove(path);
   }
+
+  async modifyContent(
+    path: string,
+    modifier: (originalContent: string) => string
+  ) {
+    const originalContent = await this.readFile(path);
+    return this.outputFile(path, modifier(originalContent));
+  }
 }

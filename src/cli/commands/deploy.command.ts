@@ -105,6 +105,11 @@ export class DeployCommand {
         );
       }
     }
+    // remove package.json private prop
+    await this.fileService.modifyContent(
+      resolve(deployDir, 'package.json'),
+      content => content.replace('\n  "private": true,', '')
+    );
   }
 
   private publish(deployDir: string) {
