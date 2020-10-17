@@ -43,6 +43,26 @@ export class OptionService {
           file: 'sheetbase-api.js',
           name: 'sheetbase.api',
         },
+        {
+          input: './src/database/exports.js',
+          file: 'sheetbase-database.js',
+          name: 'sheetbase.database',
+        },
+        {
+          input: './src/storage/exports.js',
+          file: 'sheetbase-storage.js',
+          name: 'sheetbase.storage',
+        },
+        {
+          input: './src/mail/exports.js',
+          file: 'sheetbase-mail.js',
+          name: 'sheetbase.mail',
+        },
+        {
+          input: './src/auth/exports.js',
+          file: 'sheetbase-auth.js',
+          name: 'sheetbase.auth',
+        },
       ],
     };
   }
