@@ -60,7 +60,7 @@ export class Cli {
         .command(command)
         .description(description)
         .option(...dryRunOpt) // -d, --dry-run
-        .action(({dryRun}) => this.deployCommand.run(dryRun));
+        .action(options => this.deployCommand.run(options));
     })();
 
     // help

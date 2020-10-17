@@ -7,6 +7,10 @@ import {MessageService} from '../../lib/services/message.service';
 import {FileService} from '../../lib/services/file.service';
 import {RollupService} from '../../lib/services/rollup.service';
 
+export interface DeployOptions {
+  dryRun?: boolean;
+}
+
 export class DeployCommand {
   constructor(
     private optionService: OptionService,
@@ -15,18 +19,16 @@ export class DeployCommand {
     private rollupService: RollupService
   ) {}
 
-  async run(dryRun: boolean) {
+  async run(cmdOpts: DeployOptions) {
     const options = this.optionService.getOptions();
     // staging
     await this.staging(options);
-    // publish
-    if (!dryRun) {
-      // npm publish
+    // deploy
+    if (!cmdOpts.dryRun) {
       this.publish(options.deployDir);
-      // remove /.deploy
       await this.cleanup(options.deployDir);
     } else {
-      return this.messageService.logOk('Publishing content saved.');
+      return this.messageService.logOk('Deploy content saved.');
     }
   }
 
